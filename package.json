@@ -6,7 +6,9 @@
     "highcharts": "^6.0.7",
     "material-ui": "^0.20.0",
     "react": "^16.3.1",
+    "react-dazzle": "^1.4.0",
     "react-dom": "^16.3.1",
+    "react-grid-layout": "^0.16.6",
     "react-scripts": "1.1.4"
   },
   "scripts": {
