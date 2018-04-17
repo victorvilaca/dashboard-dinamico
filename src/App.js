@@ -99,9 +99,11 @@ class App extends Component {
                     value={this.state.value}
                     onChange={this.handleChange}
                 >
-                    <MenuItem value="Gráfico 1" primaryText="Gráfico 1"/>
-                    <MenuItem value="Gráfico 2" primaryText="Gráfico 2"/>
-                    <MenuItem value="Gráfico 3" primaryText="Gráfico 3"/>
+                    <MenuItem value="Line" primaryText="Line"/>
+                    <MenuItem value="Bar" primaryText="Bar"/>
+                    <MenuItem value="Spline" primaryText="Spline"/>
+                    <MenuItem value="3D Columns" primaryText="3D Columns"/>
+                    <MenuItem value="Drilldown" primaryText="Drilldown"/>
                 </SelectField>
                 <RaisedButton
                     label="Adicionar"
@@ -111,7 +113,7 @@ class App extends Component {
             </div>
         );
     }
-  //
+
   render() {
     return (
       <div className="App">
