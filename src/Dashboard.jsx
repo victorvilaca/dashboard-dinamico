@@ -1,10 +1,23 @@
 import React from "react";
 import _ from "lodash";
 import Chart from './graficos/Chart';
+import FontIcon from 'material-ui/FontIcon';
+import Paper from 'material-ui/Paper';
 import { Responsive, WidthProvider } from "react-grid-layout";
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
-export default class AddRemoveLayout extends React.Component {
+export default class Dashboard extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            widgets: this.props.widgets,
+            currentBreakpoint: "lg",
+            compactType: "vertical",
+            mounted: false,
+            layouts: { lg: this.props.initialLayout }
+        };
+    }
+
     static defaultProps = {
         className: "layout",
         rowHeight: 30,
@@ -13,20 +26,19 @@ export default class AddRemoveLayout extends React.Component {
         initialLayout: generateLayout()
     };
 
-    state = {
-        currentBreakpoint: "lg",
-        compactType: "vertical",
-        mounted: false,
-        layouts: { lg: this.props.initialLayout }
-    };
-
-
     componentDidMount() {
         this.setState({ mounted: true });
     }
 
+    onRemoveItem(i) {
+        const widgets = this.state.widgets;
+        const index = widgets.indexOf(i);
+        if (index !== -1) widgets.splice(index, 1);
+        this.setState({widgets});
+    }
+
     generateDOM() {
-        return _.map(this.props.widgets, function(i) {
+        return _.map(this.state.widgets, (i) => {
             let options;
             switch(i){
                 case 'Line':
@@ -68,7 +80,7 @@ export default class AddRemoveLayout extends React.Component {
                     };
                     break;
                 case 'Bar':
-                    options =  {
+                    options = {
 
                         chart: {
                             type: 'bar',
@@ -141,9 +153,13 @@ export default class AddRemoveLayout extends React.Component {
                     };
                     break;
                 case 'Spline':
-                    options =  {
+                    options = {
                         chart: {
                             type: 'spline'
+                        },
+
+                        title: {
+                            text: 'Spline'
                         },
 
                         legend: {
@@ -176,6 +192,9 @@ export default class AddRemoveLayout extends React.Component {
                                 beta: 15,
                                 depth: 50
                             }
+                        },
+                        title: {
+                            text: '3D Columns'
                         },
                         plotOptions: {
                             column: {
@@ -256,31 +275,63 @@ export default class AddRemoveLayout extends React.Component {
                         }
                     };
                     break;
-
-
+                default:
+                    options = {
+                        title: {
+                            text: 'Fruit Consumption',
+                        },
+                        xAxis: {
+                            categories: [
+                                'Apples',
+                                'Bananas',
+                                'Oranges',
+                                'Pineapples',
+                                'Blueberries',
+                            ],
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Fruit eaten',
+                            },
+                        },
+                        chart: {
+                            type: 'line',
+                        },
+                        series: [
+                            {
+                                name: 'Jane',
+                                data: [1, 0, 4, 0, 3],
+                            },
+                            {
+                                name: 'John',
+                                data: [5, 7, 3, 2, 4],
+                            },
+                            {
+                                name: 'Doe',
+                                data: [0, 0, 0, 1, 0],
+                            },
+                        ],
+                    };
+                    break;
             }
+
             const removeStyle = {
                 position: "absolute",
-                right: "2px",
-                top: 0,
+                right: "10px",
+                top: "10px",
                 cursor: "pointer"
             };
 
-            function onRemoveItem(i) {
-                console.log("removing", i);
-                // this.setState({ widgets: _.reject(this.state.widgets, { i: i }) });
-            }
-            console.log("teste", i);
             return (
                 <div key={i} data-grid={{x: 0, y: 0, w: 3, h: 10}}>
-                    <Chart key={i} options={options}/>
-                    <span
-                        className="remove"
-                        style={removeStyle}
-                        onClick={onRemoveItem}
-                    >
-          x
-        </span>
+                    <Paper>
+                        <Chart options={options}/>
+                        <FontIcon
+                            className="material-icons"
+                            style={removeStyle}
+                            onClick={this.onRemoveItem.bind(this, i)}
+                        >delete_forever</FontIcon>
+                    </Paper>
                 </div>
             );
         });
@@ -292,24 +343,8 @@ export default class AddRemoveLayout extends React.Component {
         });
     };
 
-
-    onCompactTypeChange = () => {
-        const { compactType: oldCompactType } = this.state;
-        const compactType =
-            oldCompactType === "horizontal"
-                ? "vertical"
-                : oldCompactType === "vertical" ? null : "horizontal";
-        this.setState({ compactType });
-    };
-
     onLayoutChange = (layout, layouts) => {
         this.props.onLayoutChange(layout, layouts);
-    };
-
-    onNewLayout = () => {
-        this.setState({
-            layouts: { lg: generateLayout() }
-        });
     };
 
     render() {
@@ -320,11 +355,7 @@ export default class AddRemoveLayout extends React.Component {
                     layout={this.state.layouts}
                     onBreakpointChange={this.onBreakpointChange}
                     onLayoutChange={this.onLayoutChange}
-                    autoSize={true}
-                    // WidthProvider option
                     measureBeforeMount={false}
-                    // I like to have it animate on mount. If you don't, delete `useCSSTransforms` (it's default `true`)
-                    // and set `measureBeforeMount={true}`.
                     useCSSTransforms={this.state.mounted}
                     compactType={this.state.compactType}
                     preventCollision={!this.state.compactType}
@@ -335,8 +366,6 @@ export default class AddRemoveLayout extends React.Component {
         );
     }
 }
-
-// module.exports = AddRemoveLayout;
 
 function generateLayout() {
     return _.map(_.range(0, 25), function(item, i) {
@@ -351,7 +380,3 @@ function generateLayout() {
         };
     });
 }
-
-// if (require.main === module) {
-//     require("../test-hook.jsx")(module.exports);
-// }
