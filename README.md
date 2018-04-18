@@ -1,4 +1,6 @@
-Esse projeto foi criado com o intuito de construir uma aplicação web que apresente um Dashboard responsivo e configurável pelo usuário.
+## Dashboard dinâmico utilizando React
+
+Esse projeto foi criado com o intuito de construir uma aplicação web com React, que apresente um Dashboard responsivo e configurável pelo usuário.
 
 Os dados utilizados nos gráficos (widgets) são mocados, apenas para servir de exemplo, pois não é a inteção desse projeto possuir integração com backend.
 
